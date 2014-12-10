@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Gedcom" rel="Chapter" href="Gedcom.html"><link title="Parsing function." rel="Section" href="#2_Parsingfunction">
+<link title="gedcom_line getters." rel="Section" href="#2_gedcomlinegetters">
+<link title="gedcom_node getters." rel="Section" href="#2_gedcomnodegetters">
+<link title="Helpers module." rel="Section" href="#2_Helpersmodule">
+<link title="Printing module (on stdout)." rel="Section" href="#2_Printingmoduleonstdout">
+<title>Gedcom</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Gedcom.html">Gedcom</a></h1>
+
+<pre><span class="keyword">module</span> Gedcom: <code class="code">sig</code> <a href="Gedcom.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<h1 id="1_GEDCOM551handlinginOCaml">GEDCOM 5.5.1 handling in OCaml.</h1><br>
+</div>
+<hr width="100%">
+<br>
+<h2 id="2_Parsingfunction">Parsing function.</h2><br>
+
+<pre><span id="TYPEgedcom_line"><span class="keyword">type</span> <code class="type"></code>gedcom_line</span> = <code class="type">int * string option * string * string option</code> </pre>
+<div class="info ">
+<code class="code">(LVL, XREF_ID, TAG, VALUE)</code><br>
+</div>
+
+
+<pre><span id="TYPEgedcom_node"><span class="keyword">type</span> <code class="type"></code>gedcom_node</span> = <code class="type"><a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> * gedcom_node list</code> </pre>
+<div class="info ">
+You will need to use <code class="code">-rectypes</code> compiler flag with this type.<br>
+</div>
+
+
+<pre><span id="VALparse_line"><span class="keyword">val</span> parse_line</span> : <code class="type">string -> <a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a></code></pre><div class="info ">
+Parse a GEDCOM line.<br>
+</div>
+
+<pre><span id="VALparse_lines"><span class="keyword">val</span> parse_lines</span> : <code class="type">Pervasives.in_channel -> <a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> list</code></pre><div class="info ">
+Read a list of lines from an <code class="code">in_channel</code> and return the
+    <code class="code">gedcom_line list</code> corresponding.<br>
+</div>
+
+<pre><span id="VALmk_tree"><span class="keyword">val</span> mk_tree</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> list -> <a href="Gedcom.html#TYPEgedcom_node">gedcom_node</a> list</code></pre><div class="info ">
+Turn a list of <code class="code">gedcom_line</code> into a tree using tags level.<br>
+</div>
+<br>
+<h2 id="2_gedcomlinegetters"><code class="code">gedcom_line</code> getters.</h2><br>
+
+<pre><span id="VALlvl"><span class="keyword">val</span> lvl</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> -> int</code></pre><div class="info ">
+Get the level of a <code class="code">gedcom_line</code><br>
+</div>
+
+<pre><span id="VALxref"><span class="keyword">val</span> xref</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> -> string</code></pre><div class="info ">
+Get the xref of a <code class="code">gedcom_line</code>.
+    Raise <code class="code">Not_found</code> if no such information is present.<br>
+</div>
+
+<pre><span id="VALtag"><span class="keyword">val</span> tag</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> -> string</code></pre><div class="info ">
+Get the tag of a <code class="code">gedcom_line</code>.<br>
+</div>
+
+<pre><span id="VALvalue"><span class="keyword">val</span> value</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a> -> string</code></pre><div class="info ">
+Get the value of a <code class="code">gedcom_line</code>.
+    Raise <code class="code">Not_found</code> if no such information is present.<br>
+</div>
+<br>
+<h2 id="2_gedcomnodegetters"><code class="code">gedcom_node</code> getters.</h2><br>
+
+<pre><span id="VALnode"><span class="keyword">val</span> node</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_node">gedcom_node</a> -> <a href="Gedcom.html#TYPEgedcom_line">gedcom_line</a></code></pre><div class="info ">
+Get node value, i.e. the current <code class="code">gedcom_line</code>.<br>
+</div>
+
+<pre><span id="VALchildren"><span class="keyword">val</span> children</span> : <code class="type"><a href="Gedcom.html#TYPEgedcom_node">gedcom_node</a> -> <a href="Gedcom.html#TYPEgedcom_node">gedcom_node</a> list</code></pre><div class="info ">
+Get node children.<br>
+</div>
+<br>
+<h2 id="2_Helpersmodule">Helpers module.</h2><br>
+
+<pre><span class="keyword">module</span> <a href="Gedcom.GedcomHelpers.html">GedcomHelpers</a>: <code class="code">sig</code> <a href="Gedcom.GedcomHelpers.html">..</a> <code class="code">end</code></pre><br>
+<h2 id="2_Printingmoduleonstdout">Printing module (on stdout).</h2><br>
+
+<pre><span class="keyword">module</span> <a href="Gedcom.GedcomPrint.html">GedcomPrint</a>: <code class="code">sig</code> <a href="Gedcom.GedcomPrint.html">..</a> <code class="code">end</code></pre></body></html>
