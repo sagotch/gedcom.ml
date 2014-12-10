@@ -1,0 +1,14 @@
+opam-version: "1.2"
+
+ocaml-version: [ >= "4.02.0" ]
+
+maintainer: "ju.sagot@gmail.com"
+
+homepage: "http://sagotch.github.io/gedcom.ml/"
+
+build: [ [ make "build" ]
+         [ make "install" ] ]
+
+remove: [ "make" "uninstall"]
+
+depends: ["ocamlfind"]
