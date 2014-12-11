@@ -1,5 +1,7 @@
 # gedcom.ml
 
+![travis-ci](https://travis-ci.org/sagotch/gedcom.ml.svg?branch=master)
+
 GEDCOM 5.5.1 handling in OCaml. See documentation for details
 about what it can do for you.
 
