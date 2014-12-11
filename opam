@@ -1,6 +1,6 @@
 opam-version: "1.2"
 
-ocaml-version: [ >= "4.02.0" ]
+ocaml-version: [ >= "4.00.1" ]
 
 maintainer: "ju.sagot@gmail.com"
 

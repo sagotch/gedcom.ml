@@ -1,5 +1,8 @@
 (** OCaml parser for GEDCOM 5.5.1 files. *)
 
+(** OCaml 4.00.1 compatibility. *)
+let ( |> ) x f = f x
+
 let may_apply (f : 'a -> 'b) (x : 'a option) : 'b option =
   match x with None -> None | Some x -> Some (f x)
 
