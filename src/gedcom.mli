@@ -42,36 +42,35 @@ val node : gedcom_node -> gedcom_line
 (** Get node children. *)
 val children : gedcom_node -> gedcom_node list
 
-(** {2 Miscellaneous helpers.} *)
+(** {2 Helpers module.} *)
 
-(** Concatenation of lines followed by CONT / CONC lines
-    with these last ones. *)
-val concat : gedcom_line list -> gedcom_line list
+module GedcomHelpers : sig
 
-(** Trim characters which are not part of the [xref]
-    (i.e. leading and trailing ' ' and '@') *)
-val trim_xref : string -> string
+    (** Concatenation of CONT / CONC lines groups. *)
+    val concat : gedcom_line list -> gedcom_line list
 
-(** Auxiliary function to deal with [NAME] lines. *)
-module GedcomNAME : sig
+    (** Trim characters which are not part of the [xref]
+        (i.e. leading and trailing ' ' and '@') *)
+    val trim_xref : string -> string
 
-    (** [(first name, last name, title)]. *)
-    type gedcom_name = (string option * string option * string option)
+    (** Split name in first name / last name / title. *)
+    val parse_name :
+      string -> (string option * string option * string option)
 
-    (** Convert NAME value in a [gedcom_name].  *)
-    val parse_name : string -> gedcom_name
-
-    (** Extract first name part of a [gedcom_name] or raise
+    (** Extract first name part of a gedcom name or raise
         [Not_found]. *)
-    val firstname : gedcom_name -> string
+    val name_first :
+      (string option * string option * string option) -> string
 
-    (** Extract last name part of a [gedcom_name] or raise
+    (** Extract last name part of a gedcom name or raise
         [Not_found]. *)
-    val lastname : gedcom_name -> string
+    val name_last :
+      (string option * string option * string option) -> string
 
-    (** Extract title part of a [gedcom_name] or raise
+    (** Extract title part of a gedcom name or raise
         [Not_found]. *)
-    val title : gedcom_name -> string
+    val name_title :
+      (string option * string option * string option) -> string
 
   end
 

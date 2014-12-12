@@ -88,34 +88,32 @@ let parse_lines chan =
     with End_of_file -> List.rev acc
   in parse []
 
-let concat list =
-  List.fold_left
-    (fun (acc : gedcom_line list) (x : gedcom_line) ->
-     match tag x with
-     | "CONC"
-     | "CONT" ->
-	let (l, i, t, v) = List.hd acc in
-	(l, i, t, Some ( ( match v with Some x -> x | _ -> ""    )
-			 ^ ( if tag x = "CONT" then "\n" else "" )
-			 ^ ( try value x with Not_found -> ""    ) ) )
-	:: List.tl acc
-     | _ -> x :: acc)
-    []
-    list
-  |> List.rev
+module GedcomHelpers = struct
 
-let trim_xref s =
-  let open Str in
-  if string_match (regexp "^ *@?\\([^@]+\\)@? *$") s 0
-  then matched_group 1 s
-  else raise Not_found
+    let concat list =
+      List.fold_left
+	(fun (acc : gedcom_line list) (x : gedcom_line) ->
+	 match tag x with
+	 | "CONC"
+	 | "CONT" ->
+	    let (l, i, t, v) = List.hd acc in
+	    (l, i, t, Some ( ( match v with Some x -> x | _ -> ""    )
+			     ^ ( if tag x = "CONT" then "\n" else "" )
+			     ^ ( try value x with Not_found -> ""    ) ) )
+	    :: List.tl acc
+	 | _ -> x :: acc)
+	[]
+	list
+      |> List.rev
 
-module GedcomNAME = struct
+    let trim_xref s =
+      let open Str in
+      if string_match (regexp "^ *@?\\([^@]+\\)@? *$") s 0
+      then matched_group 1 s
+      else raise Not_found
 
-    type gedcom_name = (string option * string option * string option)
 
-    let parse_name name
-	: (string option * string option * string option)  =
+    let parse_name name =
       let reg = Str.regexp "^\\([^/]+\\)?/?\\([^/]+\\)?/?\\(.+\\)?$" in
       if Str.string_match reg name 0
       then (nth_opt 1 name |> may_apply String.trim,
@@ -123,15 +121,15 @@ module GedcomNAME = struct
 	    nth_opt 3 name |> may_apply String.trim)
       else raise Not_found
 
-    let firstname = function
+    let name_first = function
       | (Some x, _, _) -> x
       | _ -> raise Not_found
 
-    let lastname = function
+    let name_last = function
       | (_, Some x, _) ->  x
       | _ -> raise Not_found
 
-    let title = function
+    let name_title = function
       | (_, _, Some x) -> x
       | _ -> raise Not_found
 
