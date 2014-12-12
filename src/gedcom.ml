@@ -104,6 +104,12 @@ let concat list =
     list
   |> List.rev
 
+let trim_xref s =
+  let open Str in
+  if string_match (regexp "^ *@?\\([^@]+\\)@? *$") s 0
+  then matched_group 1 s
+  else raise Not_found
+
 module GedcomNAME = struct
 
     type gedcom_name = (string option * string option * string option)

@@ -48,6 +48,10 @@ val children : gedcom_node -> gedcom_node list
     with these last ones. *)
 val concat : gedcom_line list -> gedcom_line list
 
+(** Trim characters which are not part of the [xref]
+    (i.e. leading and trailing ' ' and '@') *)
+val trim_xref : string -> string
+
 (** Auxiliary function to deal with [NAME] lines. *)
 module GedcomNAME : sig
 
