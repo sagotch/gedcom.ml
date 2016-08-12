@@ -13,4 +13,8 @@ build: [ [ make "-C" "src/" "build" ]
 
 remove: [ make "-C" "src/" "uninstall"]
 
-depends: ["ocamlfind"]
+depends: [
+   "ocamlfind" {build}
+   "ocamlbuild" {build}
+ ]
+ 
