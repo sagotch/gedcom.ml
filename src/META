@@ -1,6 +1,0 @@
-name            ="gedcom"
-version         ="1.0.0"
-description     ="Gedcom handling library."
-requires        ="str"
-archive(byte)   ="gedcom.cma"
-archive(native) ="gedcom.cmxa"

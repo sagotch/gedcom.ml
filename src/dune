@@ -1,0 +1,5 @@
+(library
+  (name gedcom)
+  (flags -rectypes)
+  (public_name gedcom)
+)
