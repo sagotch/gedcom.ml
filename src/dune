@@ -2,4 +2,7 @@
   (name gedcom)
   (flags -rectypes)
   (public_name gedcom)
+  (inline_tests)
+  (preprocess (pps ppx_deriving.show ppx_inline_test))
+  (libraries re)
 )

@@ -1,22 +1,21 @@
 (** {1 GEDCOM 5.5.1 handling in OCaml.} *)
 
-(** {2 Parsing function.} *)
-
-(** [(LVL, XREF_ID, TAG, VALUE)] *)
-type gedcom_line = int * string option * string * string option
+type gedcom_line
 
 (** You will need to use [-rectypes] compiler flag with this type. *)
-type gedcom_node = gedcom_line * gedcom_node list
+type gedcom_node
 
-(** Parse a GEDCOM line. *)
-val parse_line : string -> gedcom_line
+(** {2 Parsing function.} *)
 
-(** Read a list of lines from an [in_channel] and return the
-    [gedcom_line list] corresponding. *)
-val parse_lines : in_channel -> gedcom_line list
+(** [next report input]
+    Get the next line.
+*)
+val next : (string -> unit) -> (unit -> string) -> gedcom_line option
 
-(** Turn a list of [gedcom_line] into a tree using tags level. *)
-val mk_tree : gedcom_line list -> gedcom_node list
+(** [fold0 report input acc fn]
+    Fold over nodes of level 0.
+*)
+val fold0 : (string -> unit) -> (unit -> string) -> 'a -> ('a -> gedcom_node -> 'a) -> 'a
 
 (** {2 [gedcom_line] getters.} *)
 
@@ -42,46 +41,32 @@ val node : gedcom_node -> gedcom_line
 (** Get node children. *)
 val children : gedcom_node -> gedcom_node list
 
-(** {2 Helpers module.} *)
+(** {2 Helpers (internal functions that may be useful for users).} *)
 
-module GedcomHelpers : sig
+(** Parse a GEDCOM line. *)
+val parse_line : (string -> unit) -> string -> gedcom_line option
 
-    (** Concatenation of CONT / CONC lines groups. *)
-    val concat : gedcom_line list -> gedcom_line list
+type gedcom_calendar = JULIAN | GREGORIAN | FRENCH | HEBREW | UNKNOWN | ROMAN
 
-    (** Trim characters which are not part of the [xref]
-        (i.e. leading and trailing ' ' and '@') *)
-    val trim_xref : string -> string
+(* (day, month, year, calendar, alt year) 0 is use for day and/or month when unspecified *)
+type gedcom_dmy = int * int * int * gedcom_calendar * int option
 
-    (** Split name in first name / last name / title. *)
-    val parse_name :
-      string -> (string option * string option * string option)
+type gedcom_date =
+  | Date_SURE of gedcom_dmy
+  | Date_ABT of gedcom_dmy
+  | Date_CAL of gedcom_dmy
+  | Date_EST of gedcom_dmy
+  | Date_INT of gedcom_dmy * string
+  | Date_TEXT of string
+  | Range_BEF of gedcom_dmy
+  | Range_AFT of gedcom_dmy
+  | Range_BET_AND of gedcom_dmy * gedcom_dmy
+  | Period_FROM of gedcom_dmy
+  | Period_TO of gedcom_dmy
+  | Period_FROM_TO of gedcom_dmy * gedcom_dmy
 
-    (** Extract first name part of a gedcom name or raise
-        [Not_found]. *)
-    val name_first :
-      (string option * string option * string option) -> string
+(** Parse a GEDCOM date. *)
+val parse_date : string -> gedcom_date
 
-    (** Extract last name part of a gedcom name or raise
-        [Not_found]. *)
-    val name_last :
-      (string option * string option * string option) -> string
-
-    (** Extract title part of a gedcom name or raise
-        [Not_found]. *)
-    val name_title :
-      (string option * string option * string option) -> string
-
-  end
-
-(** {2 Printing module (on stdout).} *)
-
-module GedcomPrint : sig
-
-    (** Print a [gedcom_line], without new line at the end. *)
-    val print_gedcom_line : gedcom_line -> unit
-
-    (** Print a [gedcom_nocde], without new line at the end. *)
-    val print_gedcom_node : gedcom_node -> unit
-
-  end
+(** Turn a list of [gedcom_line] into a tree using tags level. *)
+val tree : gedcom_line list -> gedcom_node list

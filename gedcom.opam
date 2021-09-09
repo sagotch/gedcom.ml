@@ -17,6 +17,12 @@ bug-reports: "https://github.com/geneweb/gedcom.ml/issues"
 depends: [
    "dune"
    "ocaml" { >= "4.01.0" }
+   "ppx_deriving"
+   "ppx_inline_test"
+   "re"
 ]
 
-build: [ [ "dune" "build" "-p" name "-j" jobs] ]
+build: [
+  [ "dune" "runtest" ]
+  [ "dune" "build" "-p" name "-j" jobs]
+]
