@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  build:
+
+    strategy:
+
+      fail-fast: true
+
+      matrix:
+
+        ocaml-version:
+          - 4.12.0
+          - 4.11.2
+          - 4.10.2
+          - 4.09.1
+          - 4.08.1
+          - 4.07.1
+          - 4.06.1
+          - 4.05.0
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use OCaml ${{ matrix.ocaml-version }}
+        uses: avsm/setup-ocaml@v1
+        with:
+          ocaml-version: ${{ matrix.ocaml-version }}
+
+      - run: opam pin add . -y
