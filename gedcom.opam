@@ -1,8 +1,10 @@
 opam-version: "1.2"
 
-ocaml-version: [ >= "4.00.1" ]
+name: "gedcom"
 
 version: "2.0.0"
+
+synopsis: "OCaml parser for GEDCOM 5.5.1"
 
 authors: "Julien Sagot <ju.sagot@gmail.com>"
 
@@ -13,7 +15,8 @@ homepage: "http://geneweb.github.io/gedcom.ml/"
 bug-reports: "https://github.com/geneweb/gedcom.ml/issues"
 
 depends: [
-   "dune" {build}
+   "dune"
+   "ocaml" { >= "4.01.0" }
 ]
 
 build: [ [ "dune" "build" "-p" name "-j" jobs] ]
