@@ -1,0 +1,7 @@
+(library
+  (name test_gedcom)
+  (flags -rectypes)
+  (libraries gedcom)
+  (preprocess (pps ppx_import ppx_deriving.show ppx_inline_test))
+  (inline_tests)
+)

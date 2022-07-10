@@ -10,12 +10,18 @@ type gedcom_node
 (** [next report input]
     Get the next line.
 *)
-val next : (string -> unit) -> (unit -> string) -> gedcom_line option
+val next : (string -> unit) -> (unit -> string * int * int) -> gedcom_line option
+
+val next0
+  : (string -> unit)
+  -> (unit -> string * int * int)
+  -> gedcom_line list
+  -> gedcom_node option * gedcom_line option
 
 (** [fold0 report input acc fn]
     Fold over nodes of level 0.
 *)
-val fold0 : (string -> unit) -> (unit -> string) -> 'a -> ('a -> gedcom_node -> 'a) -> 'a
+val fold0 : (string -> unit) -> (unit -> string * int * int) -> 'a -> ('a -> gedcom_node -> 'a) -> 'a
 
 (** {2 [gedcom_line] getters.} *)
 
@@ -44,7 +50,7 @@ val children : gedcom_node -> gedcom_node list
 (** {2 Helpers (internal functions that may be useful for users).} *)
 
 (** Parse a GEDCOM line. *)
-val parse_line : (string -> unit) -> string -> gedcom_line option
+val parse_line : (string -> unit) -> string -> int -> int -> gedcom_line option
 
 type gedcom_calendar = JULIAN | GREGORIAN | FRENCH | HEBREW | UNKNOWN | ROMAN
 
@@ -66,7 +72,10 @@ type gedcom_date =
   | Period_FROM_TO of gedcom_dmy * gedcom_dmy
 
 (** Parse a GEDCOM date. *)
-val parse_date : string -> gedcom_date
+val parse_date : string -> int -> int -> gedcom_date
+
+(** Parse a GEDCOM pointer (e.g. @I1@). *)
+val parse_pointer : string -> int -> int -> string option
 
 (** Turn a list of [gedcom_line] into a tree using tags level. *)
-val tree : gedcom_line list -> gedcom_node list
+val tree : int -> gedcom_line list -> gedcom_node list
